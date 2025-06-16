@@ -1,5 +1,3 @@
 {
-    "rules":{
-        "tagname-lowercase":"lower"
-    }
+    "tagname-lowercase":true
 }
