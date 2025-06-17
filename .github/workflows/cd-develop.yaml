@@ -1,0 +1,34 @@
+name: wf-cd-develop
+
+on:
+  push:
+    branches:
+      -develop
+jobs:
+  built-job-develop:
+   runs-on: ubuntu-latest
+   steps: 
+        - name: checkout Repository
+          uses: actions/checkout@v4
+        - name: Built Static Website With Parcel
+          run: npx parcel built "./src/index.html" --dist-dir "./dist" --public-url "./"
+        - name: Upload Build Artifacts
+          uses: actions/upload-pages-artifact@v3 
+          with: 
+            path: "./dist"
+            name: "build-artifact-develop"
+  deploy-develop-job:
+    needs: "built-job-develop"
+    runs-on: ubuntu-latest
+    environment:
+       name: "github-pages"
+       permissions:
+          pages: write
+          id-token: write
+        steps:
+        - name: Deploy Website on GH-Pages
+          uses: actioin/deploy-pages@v4
+           with: 
+              artifact_name: "build-artifact-develop"
+              token: "${{github.token}}"
+              
